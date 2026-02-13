@@ -36,7 +36,18 @@ export class D1Adapter implements DatabaseAdapter {
   }
 
   async exec(sql: string): Promise<void> {
-    await this.db.exec(sql);
+    const statements = sql
+      .split(";")
+      .map((s) => s.replace(/--.*$/gm, "").trim())
+      .filter(Boolean);
+    for (const stmt of statements) {
+      try {
+        await this.db.prepare(stmt).run();
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "";
+        if (!msg.includes("duration")) throw err;
+      }
+    }
   }
 
   async close(): Promise<void> {

@@ -1,6 +1,6 @@
 import { app } from "./routes";
 import { ensureInitialized } from "./lib/init";
-import { processPendingEvents } from "./lib/sync";
+import { submitPendingEvents, resolveSubmittedEvents } from "./lib/sync";
 import type { Env } from "./types";
 
 export default {
@@ -10,11 +10,13 @@ export default {
   },
 
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(
-      (async () => {
-        await ensureInitialized(env);
-        await processPendingEvents();
-      })(),
-    );
+    await ensureInitialized(env);
+
+    // Submit is quick — run inline so it completes before response
+    await submitPendingEvents();
+
+    // Resolve loop runs for ~50s (5 rounds × 10s sleep) — run via waitUntil
+    // so the scheduled handler can return while resolve keeps polling
+    ctx.waitUntil(resolveSubmittedEvents());
   },
 };
