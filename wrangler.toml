@@ -14,7 +14,6 @@ crons = ["*/2 * * * *", "*/1 * * * *"]
 
 [vars]
 NODE_ENV = "production"
-API_KEY = ""
 
 [observability]
 enabled = true
