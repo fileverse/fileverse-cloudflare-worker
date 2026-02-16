@@ -2,25 +2,22 @@ import {
   setAdapter,
   runMigrations,
   initializeFromApiKey,
-} from "@fileverse/api/cloudflare";
+} from "@fileverse/api/base";
 import { D1Adapter } from "../adapter/d1-adapter";
 import type { Env } from "../types";
 
 let initialized = false;
 
 export async function ensureInitialized(env: Env): Promise<void> {
-  if (initialized) return;
-
-  console.log("[init] starting initialization");
-
   process.env.API_KEY = env.API_KEY;
   if (env.RPC_URL) {
     process.env.RPC_URL = env.RPC_URL;
   }
   process.env.NODE_ENV = env.NODE_ENV || "production";
 
-  const adapter = new D1Adapter(env.DB);
-  setAdapter(adapter);
+  setAdapter(new D1Adapter(env.DB));
+
+  if (initialized) return;
 
   console.log("[init] running migrations");
   await runMigrations();

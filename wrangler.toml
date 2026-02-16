@@ -10,7 +10,7 @@ database_id = ""
 migrations_dir = "migrations"
 
 [triggers]
-crons = ["*/1 * * * *"]
+crons = ["*/2 * * * *", "*/1 * * * *"]
 
 [vars]
 NODE_ENV = "production"
