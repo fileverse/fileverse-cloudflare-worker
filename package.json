@@ -13,7 +13,7 @@
   "cloudflare": {
     "bindings": {
       "API_KEY": {
-        "description": "Your Fileverse API key. Get one at https://docs.fileverse.io"
+        "description": "Your Fileverse API key. Get one at https://docs.fileverse.io/?setting=dev-mode"
       },
       "RPC_URL": {
         "description": "Optional: Custom Gnosis Chain RPC URL. Leave empty to use the default."
