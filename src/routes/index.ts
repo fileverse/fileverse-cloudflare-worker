@@ -7,17 +7,21 @@ import { search } from "./search";
 import { events } from "./events";
 import { mcp } from "./mcp";
 import type { Env } from "../types";
+import guideContent from "../static/guide.md";
+import llmContent from "../static/llm.txt";
 
 const app = new Hono<{ Bindings: Env }>();
 
-// Global error handler
 app.use("*", errorHandler);
 
-// Health check
+app.get("/", (c) => c.text(guideContent));
+app.get("/llm.txt", (c) => c.text(llmContent));
 app.get("/ping", (c) => c.json({ reply: "pong" }));
 
 // Auth middleware for all /api/* routes
 app.use("/api/*", authMiddleware);
+
+
 
 // Mount route groups
 app.route("/api/ddocs", ddocs);
